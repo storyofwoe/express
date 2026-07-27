@@ -1,3 +1,5 @@
+//run npm install at /test-app to install dependencies locally
+
 const express = require('express');
 const app = express();
 const port = 3000;
