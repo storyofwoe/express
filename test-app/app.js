@@ -15,6 +15,8 @@ let students = [
   { id: 6, name: "Pyrra Nikos", course: "Mathematics" }
 ];
 
+// GET requests
+
 router.get('/students', (req, res) => {
   if (req.query.course) {
     filteredStudents = students.filter(person => person.course === req.query.course);
@@ -35,6 +37,22 @@ router.get('/students/:id', (req, res) => {
   res.status(200)
   res.json(student)
 });
+
+// POST requests
+
+router.post('/students', (req, res) => {
+  const {id, name, course} = req.body;
+  if (!id || !name || !course) {
+    return res.status(400).json({ message: "Missing fields: id, name, or course" });
+  }
+
+  if (students.find(person => person.id === id)) {
+    return res.status(409).json({ message: "Student with that id already exists" });
+  }
+
+  students.push({ id, name, course })
+  res.status(201).json({ message: "student created successfully", ...req.body })
+})
 
 /////////////////
 
