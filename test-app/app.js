@@ -4,6 +4,8 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+const router = express.Router(); 
+
 let students = [
   { id: 1, name: "Juliet", course: "Mathematics" },
   { id: 2, name: "Ruby Rose", course: "Economics" },
@@ -13,7 +15,7 @@ let students = [
   { id: 6, name: "Pyrra Nikos", course: "Mathematics" }
 ];
 
-app.get('/students', (req, res) => {
+router.get('/students', (req, res) => {
   if (req.query.course) {
     filteredStudents = students.filter(person => person.course === req.query.course);
 
@@ -26,7 +28,7 @@ app.get('/students', (req, res) => {
   }
 });
 
-app.get('/students/:id', (req, res) => {
+router.get('/students/:id', (req, res) => {
   const personId = parseInt(req.params.id);
   student = students.find(person => person.id === personId);
   
@@ -34,12 +36,14 @@ app.get('/students/:id', (req, res) => {
   res.json(student)
 });
 
-//////////////////
+/////////////////
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
   res.status(200)
   res.send('Hello, world!');
 });
+
+app.use('/api', router);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
