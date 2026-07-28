@@ -16,7 +16,9 @@ app.use((req, res, next) => {
 app.get('/blogs', (req, res) => {
   const titles = blogs.map(blogs => blogs.title);
 
-  res.json(titles)
+  const result = blogs.map( ({ id, title }) => ({ id, title }) );
+
+  res.json(result)
 });
 
 app.get('/blogs/:id', (req, res) => {
