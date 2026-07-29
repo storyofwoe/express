@@ -14,6 +14,27 @@ const user = [
   { id: 1, username: "r.rose", password: "1234" }
 ]
 
+const sumDigits = (input) => {
+  sum = 0;
+
+  while (input) {
+    sum += value % 10;
+    value = Math.floor(value / 10);
+  };
+
+  return sum;
+}
+
+const hashFunc = (input) => {
+  const inputInt = parseInt(input)
+
+  return sumDigits(inputInt);
+}
+
+//-----------------
+//ENDPOINTS
+//-----------------
+
 app.use((req, res, next) => {
   console.log(`${req.method}, ${req.url}`)
   next();
@@ -25,8 +46,6 @@ app.post('/login', (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ message: 'Missing fields: name or password' })
   }
-
-  //const result = blogs.map( ({ username, password }) => ({ username, password }) );
 
   const userLogin = user.find(u => u.username === username)
   if (userLogin) {
@@ -59,6 +78,10 @@ app.post('/signup', (req, res) => {
   user.push({ id, username, password })
   res.status(201).json({ message: 'user created successfully', ...req.body })
 })
+
+//------------------
+//BLOGS
+//------------------
 
 app.get('/blogs', (req, res) => {
   const titles = blogs.map(blogs => blogs.title);
