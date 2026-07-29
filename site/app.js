@@ -51,24 +51,19 @@ app.post('/login', (req, res) => {
     return res.status(400).json({ message: 'Missing fields: name or password' })
   }
 
-  // const dbUser = user.find(u => u.username === givenUsername)
-  // const dbHash = hashFunc(parseInt(userLogin.password))
+  const dbDetails = user.find(u => u.username === givenUsername)
 
-  // const dbDetails = user.map( ({ username, hash }) => ({ username, hash }) );
+  if (dbDetails) { //.find already verifies the username is correct, this is to check if it's not null
+    const dbUser = dbDetails.username;
+    const dbHash = dbDetails.hash;
+    if (givenHash === dbHash) {
+      return res.status(200).json({ message: 'Successfully logged in as', user: dbUser })
 
-  // console.log(dbDetails);
-
-  //we need to compare given username against the db to check if account even exists
-  //then we need to put the given password through the hash algorithm and compare with db to check if password is correct
-
-  if (userLogin) {
-    if (userHash === hash) {
-      return res.status(200).json({ message: 'Successfully logged in as', user: userLogin.username })
-    } else {
+    } else { //if password is wrong
       return res.status(401).json({ message: 'Error: username or password incorrect' })
     }
 
-  } else {
+  } else { //if username is null
     return res.status(401).json({ message: 'Error: username or password incorrect' })
   }
 })
