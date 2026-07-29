@@ -11,23 +11,26 @@ const blogs = [
 ];
 
 const user = [
-  { id: 1, username: "r.rose", password: "1234" }
+  { id: 1, username: "r.rose", hash: 10 }
 ]
 
 const sumDigits = (input) => {
-  sum = 0;
+  let sum = 0;
 
   while (input) {
-    sum += value % 10;
-    value = Math.floor(value / 10);
+    sum += input % 10;
+    input = Math.floor(input / 10);
   };
 
   return sum;
 }
 
 const hashFunc = (input) => {
-  const inputInt = parseInt(input)
+  if (!input) {
+    return null
+  }
 
+  const inputInt = parseInt(input)
   return sumDigits(inputInt);
 }
 
@@ -41,15 +44,25 @@ app.use((req, res, next) => {
 })
 
 app.post('/login', (req, res) => {
-  const { username, password } = req.body;
+  const givenUsername = req.body.username;
+  const givenHash = hashFunc(parseInt(req.body.password));
 
-  if (!username || !password) {
+  if (!givenUsername || !givenHash) {
     return res.status(400).json({ message: 'Missing fields: name or password' })
   }
 
-  const userLogin = user.find(u => u.username === username)
+  // const dbUser = user.find(u => u.username === givenUsername)
+  // const dbHash = hashFunc(parseInt(userLogin.password))
+
+  // const dbDetails = user.map( ({ username, hash }) => ({ username, hash }) );
+
+  // console.log(dbDetails);
+
+  //we need to compare given username against the db to check if account even exists
+  //then we need to put the given password through the hash algorithm and compare with db to check if password is correct
+
   if (userLogin) {
-    if (userLogin.password === password) {
+    if (userHash === hash) {
       return res.status(200).json({ message: 'Successfully logged in as', user: userLogin.username })
     } else {
       return res.status(401).json({ message: 'Error: username or password incorrect' })
