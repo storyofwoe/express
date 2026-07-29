@@ -2,15 +2,40 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+app.use(express.json())
+
 const blogs = [
   { id: 1, title: "Intro to Node.js", content: "Node.js is a Javascript runtime built on Chrome's V8 engine..." },
   { id: 2, title: "Routing in Express", content: "Routing in Express helps you define endpoints for your app..." },
   { id: 3, title: "Middleware Explained", content: "Middleware functions have access to req, res, and next..." }
 ];
 
+const user = [
+  { id: 1, username: "r.rose", password: "1234" }
+]
+
 app.use((req, res, next) => {
   console.log(`${req.method}, ${req.url}`)
   next();
+})
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Missing fields: name or password' })
+  }
+
+  //const result = blogs.map( ({ username, password }) => ({ username, password }) );
+
+  const userLogin = user.find(u => u.username === username)
+  if (userLogin) {
+    if (userLogin.password === password) {
+      return res.status(200).json({ message: 'Successfully logged in as', user: userLogin.username })
+    } else {
+      return res.status(401).json({ message: 'Error: username or password incorrect' })
+    }
+  }
 })
 
 app.get('/blogs', (req, res) => {
