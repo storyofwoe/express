@@ -69,22 +69,26 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/signup', (req, res) => {
-  const { id, username, password } = req.body;
+  // const { id, username, password } = req.body;
 
-  if (!id || !username || !password) {
+  const givenId = req.body.id;
+  const givenUsername = req.body.username;
+  const givenHash = hashFunc(parseInt(req.body.password));
+
+  if (!givenId || !givenUsername || !givenHash) {
     return res.status(400).json({ message: 'Missing fields: id, username, or password' })
   }
 
-  if (user.find(person => person.id === id)) {
+  if (user.find(person => person.id === givenId)) {
     return res.status(409).json({ message: "User with that id already exists" });
   }
 
-  if (user.find(person => person.username === username)) {
+  if (user.find(person => person.username === givenUsername)) {
     return res.status(409).json({ message: "User with that username already exists" });
   }
 
-  user.push({ id, username, password })
-  res.status(201).json({ message: 'user created successfully', ...req.body })
+  user.push({ id: givenId, username: givenUsername, hash: givenHash })
+  res.status(201).json({ message: 'user created successfully', user: givenUsername })
 })
 
 //------------------
