@@ -35,7 +35,29 @@ app.post('/login', (req, res) => {
     } else {
       return res.status(401).json({ message: 'Error: username or password incorrect' })
     }
+
+  } else {
+    return res.status(401).json({ message: 'Error: username or password incorrect' })
   }
+})
+
+app.post('/signup', (req, res) => {
+  const { id, username, password } = req.body;
+
+  if (!id || !username || !password) {
+    return res.status(400).json({ message: 'Missing fields: id, username, or password' })
+  }
+
+  if (user.find(person => person.id === id)) {
+    return res.status(409).json({ message: "User with that id already exists" });
+  }
+
+  if (user.find(person => person.username === username)) {
+    return res.status(409).json({ message: "User with that username already exists" });
+  }
+
+  user.push({ id, username, password })
+  res.status(201).json({ message: 'user created successfully', ...req.body })
 })
 
 app.get('/blogs', (req, res) => {
