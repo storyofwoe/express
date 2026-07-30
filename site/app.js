@@ -43,11 +43,13 @@ const stringHashFunc = (input) => {
     let letterVal = input.charCodeAt(i);
     if (letterVal - 96 < 0) { //if the letter is a capital
       sum += letterVal - 64
-      
+
     } else { //if the letter is lowercase
       sum += letterVal - 96
     }
   }
+
+  return sum;
 }
 
 //-----------------
@@ -107,6 +109,34 @@ app.post('/signup', (req, res) => {
 
   user.push({ id: givenId, username: givenUsername, hash: givenHash }) //never store password as plaintext
   res.status(201).json({ message: 'user created successfully', user: givenUsername })
+})
+
+app.post('/signup-string', (req, res) => {
+  const givenId = req.body.id;
+  const givenUsername = req.body.username;
+  const givenHash = stringHashFunc(req.body.password);
+
+  //not including validating because this is an early test and POC
+
+  user.push({ id: givenId, username: givenUsername, hash: givenHash })
+  // console.log(user);
+  res.status(201).json({ message: 'user created successfully', user: givenUsername })
+})
+
+app.post('/login-string', (req, res) => {
+  const givenUsername = req.body.username;
+  const givenHash = stringHashFunc(req.body.password);
+
+  const dbDetails = user.find(u => u.username === givenUsername)
+  const dbUser = dbDetails.username;
+  const dbHash = dbDetails.hash;
+
+  if (dbHash === givenHash) {
+      return res.status(200).json({ message: 'Successfully logged in as', user: dbUser })
+
+  } else {
+      return res.status(401).json({ message: 'Error: username or password incorrect' })
+  }
 })
 
 //------------------
