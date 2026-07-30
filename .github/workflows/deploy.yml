@@ -42,15 +42,15 @@ jobs:
 
       - name: POST /login (existing)
         run: |
-          curl -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "r.rose", "password":"1234"}'
+          curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "r.rose", "password":"1234"}'
 
       - name: POST /signup
         run: |
-          curl -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"id": 2, "username": "penny", "password":"87284"}'
+          curl --fail -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"id": 2, "username": "penny", "password":"87284"}'
 
       - name: POST /login (new)
         run: |
-          curl -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"username": "penny", "password": "87284"}'
+          curl --fail -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"username": "penny", "password": "87284"}'
 
       - name: stop server
         if: always()
