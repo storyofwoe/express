@@ -37,4 +37,5 @@ jobs:
 
       - name: stop server
         if: always()
+        working-directory: site
         run: kill $(cat server.pid)
