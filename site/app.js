@@ -34,6 +34,22 @@ const hashFunc = (input) => {
   return sumDigits(inputInt);
 }
 
+const stringHashFunc = (input) => {
+  if (!input) { return null };
+  let sum = 0;
+  const wordLen = input.length
+
+  for (let i = 0; i < wordLen; i++) {
+    let letterVal = input.charCodeAt(i);
+    if (letterVal - 96 < 0) { //if the letter is a capital
+      sum += letterVal - 64
+      
+    } else { //if the letter is lowercase
+      sum += letterVal - 96
+    }
+  }
+}
+
 //-----------------
 //ENDPOINTS
 //-----------------
