@@ -6,6 +6,9 @@ on:
       - synchronize
     paths:
       - '**/*.js'
+  push:
+    branches:
+      - gh-actions
 jobs:
   host-server:
     runs-on: ubuntu-latest
