@@ -16,8 +16,15 @@ jobs:
       - run: "cd site"
       - run: "npm ci"
 
+      - name: start server
+        run: |
+          node app.js &
+          echo $! > server.pid
+
       - name: Wait for server
         run: |
           npx wait-on http://localhost:3000/
 
-      - name: run server
+      - name: stop server
+        if: always()
+        run: kill $(cat server.pid)
