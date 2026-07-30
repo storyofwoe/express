@@ -6,6 +6,7 @@ on:
       - synchronize
     paths:
       - '**/*.js'
+      - '**/*.yml'
   push:
     branches:
       - gh-actions
@@ -31,9 +32,25 @@ jobs:
         run: |
           ps -p $(cat server.pid)
 
-      - name: Wait for server
+      - name: Wait for /
         run: |
           npx wait-on http://localhost:3000/ --timeout 30000
+
+      - name: Wait for /about
+        run: |
+          npx wait-on http-get://localhost:3000/about --timeout 30000
+
+      - name: POST /login (existing)
+        run: |
+          curl -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "r.rose", "password":"1234"}'
+
+      - name: POST /signup
+        run: |
+          curl -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"id": 2, "username": "penny", "password":"87284"}'
+
+      - name: POST /login (new)
+        run: |
+          curl -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"username": "penny", "password": "87284"}'
 
       - name: stop server
         if: always()
