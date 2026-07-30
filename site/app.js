@@ -38,8 +38,8 @@ const hashFunc = (input) => {
 //ENDPOINTS
 //-----------------
 
-app.get('/', (req, res) => {
-  return res.status(200).json({ health: 'ok' })
+app.head('/', (req, res) => {
+  return res.status(200).end();
 })
 
 app.use((req, res, next) => {
