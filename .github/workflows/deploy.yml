@@ -13,8 +13,8 @@ jobs:
         uses: actions/checkout@v6
       
       - name: install dependencies
-      - run: "cd site"
-      - run: "npm ci"
+        run: "cd site"
+        run: "npm ci"
 
       - name: start server
         run: |
