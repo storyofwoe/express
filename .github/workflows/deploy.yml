@@ -1,0 +1,23 @@
+name: auto host site
+on:
+  pull_request:
+    types:
+      - opened
+    paths:
+      - '**.js'
+jobs:
+  host-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo code
+        uses: actions/checkout@v6
+      
+      - name: install dependencies
+      - run: "cd site"
+      - run: "npm ci"
+
+      - name: Wait for server
+        run: |
+          npx wait-on http://localhost:3000/
+
+      - name: run server
