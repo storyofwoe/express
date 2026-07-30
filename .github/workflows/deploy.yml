@@ -19,7 +19,7 @@ jobs:
       - name: install dependencies
         run: |
           cd site
-          npm ci
+          npm install
 
       - name: start server
         run: |
