@@ -38,7 +38,7 @@ const hashFunc = (input) => {
 //ENDPOINTS
 //-----------------
 
-app.head('/', (req, res) => {
+app.head('/', (req, res) => { //healthcheck
   return res.status(200).end();
 })
 
@@ -57,7 +57,7 @@ app.post('/login', (req, res) => {
 
   const dbDetails = user.find(u => u.username === givenUsername)
 
-  if (dbDetails) { //.find already verifies the username is correct, this is to check if it's not null
+  if (dbDetails) { //.find() already verifies the username is correct, this is to check if it's not null
     const dbUser = dbDetails.username;
     const dbHash = dbDetails.hash;
     if (givenHash === dbHash) {
@@ -73,8 +73,6 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/signup', (req, res) => {
-  // const { id, username, password } = req.body;
-
   const givenId = req.body.id;
   const givenUsername = req.body.username;
   const givenHash = hashFunc(parseInt(req.body.password));
@@ -83,15 +81,15 @@ app.post('/signup', (req, res) => {
     return res.status(400).json({ message: 'Missing fields: id, username, or password' })
   }
 
-  if (user.find(person => person.id === givenId)) {
+  if (user.find(person => person.id === givenId)) { //check for conflicting ids
     return res.status(409).json({ message: "User with that id already exists" });
   }
 
-  if (user.find(person => person.username === givenUsername)) {
+  if (user.find(person => person.username === givenUsername)) { //check for conflicting usernames
     return res.status(409).json({ message: "User with that username already exists" });
   }
 
-  user.push({ id: givenId, username: givenUsername, hash: givenHash })
+  user.push({ id: givenId, username: givenUsername, hash: givenHash }) //never store password as plaintext
   res.status(201).json({ message: 'user created successfully', user: givenUsername })
 })
 
@@ -102,7 +100,7 @@ app.post('/signup', (req, res) => {
 app.get('/blogs', (req, res) => {
   const titles = blogs.map(blogs => blogs.title);
 
-  const result = blogs.map( ({ id, title }) => ({ id, title }) );
+  const result = blogs.map( ({ id, title }) => ({ id, title }) ); //return just id and title (not content)
 
   res.json(result)
 });
@@ -123,6 +121,10 @@ app.get('/about', (req, res) => {
         <p>Lorem ipsom dolor sit amet</p>
     `.trim())
 })
+
+//-------------------
+// LISTENING
+//-------------------
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
