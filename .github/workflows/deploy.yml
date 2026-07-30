@@ -49,6 +49,14 @@ jobs:
         run: |
           curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "penny", "password": "87284"}'
 
+      - name: POST /signup-string
+        run: |
+          curl --fail -X POST "http://localhost:3000/signup-string" -H "Content-Type: application/json" -d '{"id": 3, "username": "n.valkyrie", "password": "iLoveHammers"}'
+
+      - name: POST /login-string
+        run: |
+          curl --fail -X POST "http:localhost:3000/login-string" -H "Content-Type: application/json" -d '{"username": "n.valkyrie", "password":"iLoveHammers"}'
+
       - name: stop server
         if: always()
         working-directory: site
