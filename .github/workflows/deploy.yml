@@ -1,0 +1,55 @@
+name: auto host site
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    paths:
+      - '**/*.js'
+      - '**/*.yml'
+jobs:
+  host-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo code
+        uses: actions/checkout@v6
+      
+      - name: install dependencies
+        working-directory: site
+        run: npm ci
+
+      - name: start server
+        working-directory: site
+        run: |
+          node app.js &
+          echo $! > server.pid
+
+      - name: check process
+        working-directory: site
+        run: |
+          ps -p $(cat server.pid)
+
+      - name: Wait for /
+        run: |
+          npx wait-on http://localhost:3000/ --timeout 30000
+
+      - name: Wait for /about
+        run: |
+          npx wait-on http-get://localhost:3000/about --timeout 30000
+
+      - name: POST /login (existing)
+        run: |
+          curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "r.rose", "password":"1234"}'
+
+      - name: POST /signup
+        run: |
+          curl --fail -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"id": 2, "username": "penny", "password":"87284"}'
+
+      - name: POST /login (new)
+        run: |
+          curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "penny", "password": "87284"}'
+
+      - name: stop server
+        if: always()
+        working-directory: site
+        run: kill $(cat server.pid)
