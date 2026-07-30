@@ -55,7 +55,7 @@ jobs:
 
       - name: POST /login-string
         run: |
-          curl --fail -X POST "http:localhost:3000/login-string" -H "Content-Type: application/json" -d '{"username": "n.valkyrie", "password":"iLoveHammers"}'
+          curl --fail -X POST "http://localhost:3000/login-string" -H "Content-Type: application/json" -d '{"username": "n.valkyrie", "password":"iLoveHammers"}'
 
       - name: stop server
         if: always()
