@@ -7,9 +7,6 @@ on:
     paths:
       - '**/*.js'
       - '**/*.yml'
-  push:
-    branches:
-      - gh-actions
 jobs:
   host-server:
     runs-on: ubuntu-latest
@@ -50,7 +47,7 @@ jobs:
 
       - name: POST /login (new)
         run: |
-          curl --fail -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"username": "penny", "password": "87284"}'
+          curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "penny", "password": "87284"}'
 
       - name: stop server
         if: always()
