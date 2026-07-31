@@ -14,24 +14,38 @@ const user = [
   { id: 1, username: "r.rose", hash: 10 }
 ]
 
-const sumDigits = (input) => {
+const stringHashFunc = (input) => {
+  if (!input) { return null };
   let sum = 0;
 
-  while (input) {
-    sum += input % 10;
-    input = Math.floor(input / 10);
-  };
+  let letterVal = input.charCodeAt(0);
+  if (letterVal - 96 < 0) { //if the letter is a capital
+    sum = letterVal - 64 + 26;
+
+  } else { //if the letter is lowercase
+    sum = letterVal - 96
+  }
 
   return sum;
 }
 
-const hashFunc = (input) => {
-  if (!input) {
-    return null
+const hashFunc = (word) => {
+  if (!word) { return null };
+
+  const wordLen = word.length; 
+  let sum = 0;
+
+  for (let i = 0; i < wordLen; i++) {
+    let letter = word[i];
+    if (isNaN(letter)) {
+      sum += stringHashFunc(letter);
+    } else {
+      // sum += numHashFunc(letter);
+      sum += parseInt(letter)
+    }
   }
 
-  const inputInt = parseInt(input)
-  return sumDigits(inputInt);
+  return sum % 53;
 }
 
 //-----------------
@@ -47,9 +61,13 @@ app.use((req, res, next) => {
   next();
 })
 
+// app.get('/hash', (req, res) => {
+//   return res.status(200).json({ password: "PassWord123", hash: hashFunc("PassWord123") }) //checking hashFunc works as intended
+// })
+
 app.post('/login', (req, res) => {
   const givenUsername = req.body.username;
-  const givenHash = hashFunc(parseInt(req.body.password));
+  const givenHash = hashFunc(req.body.password);
 
   if (!givenUsername || !givenHash) {
     return res.status(400).json({ message: 'Missing fields: name or password' })
@@ -75,7 +93,7 @@ app.post('/login', (req, res) => {
 app.post('/signup', (req, res) => {
   const givenId = req.body.id;
   const givenUsername = req.body.username;
-  const givenHash = hashFunc(parseInt(req.body.password));
+  const givenHash = hashFunc(req.body.password);
 
   if (!givenId || !givenUsername || !givenHash) {
     return res.status(400).json({ message: 'Missing fields: id, username, or password' })
@@ -92,6 +110,37 @@ app.post('/signup', (req, res) => {
   user.push({ id: givenId, username: givenUsername, hash: givenHash }) //never store password as plaintext
   res.status(201).json({ message: 'user created successfully', user: givenUsername })
 })
+
+
+// The following endpoints existed before alphanumeric passwords were supported.
+
+// app.post('/signup-string', (req, res) => {
+//   const givenId = req.body.id;
+//   const givenUsername = req.body.username;
+//   const givenHash = stringHashFunc(req.body.password);
+
+//   //not including validating because this is an early test and POC
+
+//   user.push({ id: givenId, username: givenUsername, hash: givenHash })
+//   // console.log(user);
+//   res.status(201).json({ message: 'user created successfully', user: givenUsername })
+// })
+
+// app.post('/login-string', (req, res) => {
+//   const givenUsername = req.body.username;
+//   const givenHash = stringHashFunc(req.body.password);
+
+//   const dbDetails = user.find(u => u.username === givenUsername)
+//   const dbUser = dbDetails.username;
+//   const dbHash = dbDetails.hash;
+
+//   if (dbHash === givenHash) {
+//       return res.status(200).json({ message: 'Successfully logged in as', user: dbUser })
+
+//   } else {
+//       return res.status(401).json({ message: 'Error: username or password incorrect' })
+//   }
+// })
 
 //------------------
 //BLOGS
