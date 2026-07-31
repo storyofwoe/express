@@ -39,7 +39,7 @@ jobs:
 
       - name: POST /login (fail deliberately)
         run: |
-          STATUS=$(curl -s -o /dev/null -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username":"r.rose","password":"12345"}')
+          STATUS=$(curl -s -o /dev/null -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username":"r.rose","password":"12345"}' -w ${http_code})
 
           if [ "$STATUS" != "401" ]; then
             echo "Expected 401, got $STATUS"
