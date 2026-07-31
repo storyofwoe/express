@@ -14,26 +14,6 @@ const user = [
   { id: 1, username: "r.rose", hash: 10 }
 ]
 
-const sumDigits = (input) => {
-  let sum = 0;
-
-  while (input) {
-    sum += input % 10;
-    input = Math.floor(input / 10);
-  };
-
-  return sum;
-}
-
-const numHashFunc = (input) => {
-  if (!input) {
-    return null
-  }
-
-  const inputInt = parseInt(input)
-  return sumDigits(inputInt);
-}
-
 const stringHashFunc = (input) => {
   if (!input) { return null };
   let sum = 0;
@@ -131,33 +111,36 @@ app.post('/signup', (req, res) => {
   res.status(201).json({ message: 'user created successfully', user: givenUsername })
 })
 
-app.post('/signup-string', (req, res) => {
-  const givenId = req.body.id;
-  const givenUsername = req.body.username;
-  const givenHash = stringHashFunc(req.body.password);
 
-  //not including validating because this is an early test and POC
+// The following endpoints existed before alphanumeric passwords were supported.
 
-  user.push({ id: givenId, username: givenUsername, hash: givenHash })
-  // console.log(user);
-  res.status(201).json({ message: 'user created successfully', user: givenUsername })
-})
+// app.post('/signup-string', (req, res) => {
+//   const givenId = req.body.id;
+//   const givenUsername = req.body.username;
+//   const givenHash = stringHashFunc(req.body.password);
 
-app.post('/login-string', (req, res) => {
-  const givenUsername = req.body.username;
-  const givenHash = stringHashFunc(req.body.password);
+//   //not including validating because this is an early test and POC
 
-  const dbDetails = user.find(u => u.username === givenUsername)
-  const dbUser = dbDetails.username;
-  const dbHash = dbDetails.hash;
+//   user.push({ id: givenId, username: givenUsername, hash: givenHash })
+//   // console.log(user);
+//   res.status(201).json({ message: 'user created successfully', user: givenUsername })
+// })
 
-  if (dbHash === givenHash) {
-      return res.status(200).json({ message: 'Successfully logged in as', user: dbUser })
+// app.post('/login-string', (req, res) => {
+//   const givenUsername = req.body.username;
+//   const givenHash = stringHashFunc(req.body.password);
 
-  } else {
-      return res.status(401).json({ message: 'Error: username or password incorrect' })
-  }
-})
+//   const dbDetails = user.find(u => u.username === givenUsername)
+//   const dbUser = dbDetails.username;
+//   const dbHash = dbDetails.hash;
+
+//   if (dbHash === givenHash) {
+//       return res.status(200).json({ message: 'Successfully logged in as', user: dbUser })
+
+//   } else {
+//       return res.status(401).json({ message: 'Error: username or password incorrect' })
+//   }
+// })
 
 //------------------
 //BLOGS
