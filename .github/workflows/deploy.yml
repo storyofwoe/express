@@ -37,6 +37,15 @@ jobs:
         run: |
           npx wait-on http-get://localhost:3000/about --timeout 30000
 
+      - name: POST /login (fail deliberately)
+        run: |
+          STATUS=$(curl -s -o /dev/null -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username":"r.rose","password":"12345"}')
+
+          if [ "$STATUS" != "401" ]; then
+            echo "Expected 401, got $STATUS"
+            exit 1
+          fi
+
       - name: POST /login (existing)
         run: |
           curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "r.rose", "password":"1234"}'
