@@ -37,6 +37,28 @@ jobs:
         run: |
           npx wait-on http-get://localhost:3000/about --timeout 30000
 
+      - name: POST /login (wrong password)
+        run: |
+          STATUS=$(curl -s -o /dev/null -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username":"r.rose","password":"12345"}' -w %{http_code})
+
+          if [ "$STATUS" != "401" ]; then
+            echo "Expected 401, got $STATUS"
+            exit 1
+          else
+            echo "$STATUS"
+          fi
+
+      - name: POST /login (wrong username)
+        run: |
+          STATUS=$(curl -s -o /dev/null -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username":"w.schnee","password":"1234"}' -w %{http_code})
+
+          if [ "$STATUS" != "401" ]; then
+            echo "Expected 401, got $STATUS"
+            exit 1
+          else
+            echo "$STATUS"
+          fi
+
       - name: POST /login (existing)
         run: |
           curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "r.rose", "password":"1234"}'
@@ -48,6 +70,28 @@ jobs:
       - name: POST /login (new)
         run: |
           curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "penny", "password": "87284"}'
+
+      - name: POST /signup (duplicate username)
+        run: |
+          STATUS=$(curl -s -o /dev/null -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"id": 3, "username":"penny","password":"12345"}' -w %{http_code})
+
+          if [ "$STATUS" != "409" ]; then
+            echo "Expected 409, got $STATUS"
+            exit 1
+          else
+            echo "$STATUS"
+          fi
+
+      - name: POST /signup (duplicate id)
+        run: |
+          STATUS=$(curl -s -o /dev/null -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"id": 2, "username":"y.long","password":"123456"}' -w %{http_code})
+
+          if [ "$STATUS" != "409" ]; then
+            echo "Expected 409, got $STATUS"
+            exit 1
+          else
+            echo "$STATUS"
+          fi
 
       - name: POST /signup-string
         run: |
