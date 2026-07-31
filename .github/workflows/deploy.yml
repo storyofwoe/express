@@ -65,11 +65,11 @@ jobs:
 
       - name: POST /signup
         run: |
-          curl --fail -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"id": 2, "username": "penny", "password":"87284"}'
+          curl --fail -X POST "http://localhost:3000/signup" -H "Content-Type: application/json" -d '{"id": 2, "username": "penny", "password":"robot87284"}'
 
       - name: POST /login (new)
         run: |
-          curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "penny", "password": "87284"}'
+          curl --fail -X POST "http://localhost:3000/login" -H "Content-Type: application/json" -d '{"username": "penny", "password": "robot87284"}'
 
       - name: POST /signup (duplicate username)
         run: |

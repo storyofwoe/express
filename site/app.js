@@ -25,7 +25,7 @@ const sumDigits = (input) => {
   return sum;
 }
 
-const hashFunc = (input) => {
+const numHashFunc = (input) => {
   if (!input) {
     return null
   }
@@ -37,19 +37,35 @@ const hashFunc = (input) => {
 const stringHashFunc = (input) => {
   if (!input) { return null };
   let sum = 0;
-  const wordLen = input.length
 
-  for (let i = 0; i < wordLen; i++) {
-    let letterVal = input.charCodeAt(i);
-    if (letterVal - 96 < 0) { //if the letter is a capital
-      sum += letterVal - 64
+  let letterVal = input.charCodeAt(0);
+  if (letterVal - 96 < 0) { //if the letter is a capital
+    sum = letterVal - 64 + 26;
 
-    } else { //if the letter is lowercase
-      sum += letterVal - 96
-    }
+  } else { //if the letter is lowercase
+    sum = letterVal - 96
   }
 
   return sum;
+}
+
+const hashFunc = (word) => {
+  if (!word) { return null };
+
+  const wordLen = word.length; 
+  let sum = 0;
+
+  for (let i = 0; i < wordLen; i++) {
+    let letter = word[i];
+    if (isNaN(letter)) {
+      sum += stringHashFunc(letter);
+    } else {
+      // sum += numHashFunc(letter);
+      sum += parseInt(letter)
+    }
+  }
+
+  return sum % 53;
 }
 
 //-----------------
@@ -65,9 +81,13 @@ app.use((req, res, next) => {
   next();
 })
 
+// app.get('/hash', (req, res) => {
+//   return res.status(200).json({ password: "PassWord123", hash: hashFunc("PassWord123") }) //checking hashFunc works as intended
+// })
+
 app.post('/login', (req, res) => {
   const givenUsername = req.body.username;
-  const givenHash = hashFunc(parseInt(req.body.password));
+  const givenHash = hashFunc(req.body.password);
 
   if (!givenUsername || !givenHash) {
     return res.status(400).json({ message: 'Missing fields: name or password' })
@@ -93,7 +113,7 @@ app.post('/login', (req, res) => {
 app.post('/signup', (req, res) => {
   const givenId = req.body.id;
   const givenUsername = req.body.username;
-  const givenHash = hashFunc(parseInt(req.body.password));
+  const givenHash = hashFunc(req.body.password);
 
   if (!givenId || !givenUsername || !givenHash) {
     return res.status(400).json({ message: 'Missing fields: id, username, or password' })
