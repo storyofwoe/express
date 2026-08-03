@@ -55,6 +55,10 @@ app.head('/', (req, res) => { //healthcheck
   return res.status(200).end();
 })
 
+app.get('/', (req, res) => {
+  res.send(`<h1>Welcome!</h1>`)
+})
+
 app.use((req, res, next) => {
   console.log(`${req.method}, ${req.url}`)
   next();
