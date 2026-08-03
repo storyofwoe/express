@@ -20,7 +20,7 @@ const stringHashFunc = (input) => {
 
   let letterVal = input.charCodeAt(0);
   if (letterVal - 96 < 0) { //if the letter is a capital
-    sum = letterVal - 64 + 26;
+    sum = letterVal - 64 + 26;//Make captials start at 27
 
   } else { //if the letter is lowercase
     sum = letterVal - 96
@@ -40,7 +40,6 @@ const hashFunc = (word) => {
     if (isNaN(letter)) {
       sum += stringHashFunc(letter);
     } else {
-      // sum += numHashFunc(letter);
       sum += parseInt(letter)
     }
   }
@@ -60,10 +59,6 @@ app.use((req, res, next) => {
   console.log(`${req.method}, ${req.url}`)
   next();
 })
-
-// app.get('/hash', (req, res) => {
-//   return res.status(200).json({ password: "PassWord123", hash: hashFunc("PassWord123") }) //checking hashFunc works as intended
-// })
 
 app.post('/login', (req, res) => {
   const givenUsername = req.body.username;
