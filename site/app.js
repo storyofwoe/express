@@ -110,6 +110,34 @@ app.post('/signup', (req, res) => {
   res.status(201).json({ message: 'user created successfully', user: givenUsername })
 })
 
+app.delete('/delete', (req, res) => {
+  const givenUsername = req.body.username;
+  const givenHash = hashFunc(req.body.password);
+
+  if (!givenUsername || !givenHash) {
+    return res.status(400).json({ message: 'Missing fields: username or password' })
+  }
+
+  const dbDetails = user.find(u => u.username === givenUsername)
+
+  if (dbDetails) { //.find() already verifies the username is correct, this is to check if it's not null
+    const dbUser = dbDetails.username;
+    const dbHash = dbDetails.hash;
+    if (givenHash === dbHash) {
+      const dbIndex = user.indexOf(dbDetails);
+      user.splice(dbIndex, 1)
+      console.log(user); //debugging
+      return res.status(200).json({ message: 'User successfully deleted', user: dbUser });
+
+    } else { //if password is wrong
+      return res.status(401).json({ message: 'Error: username or password incorrect' })
+    }
+
+  } else { //if username is null
+    return res.status(401).json({ message: 'Error: username or password incorrect' })
+  }
+})
+
 
 // The following endpoints existed before alphanumeric passwords were supported.
 
