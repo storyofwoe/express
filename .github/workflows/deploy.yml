@@ -82,6 +82,11 @@ jobs:
             echo "$STATUS"
           fi
 
+      - name: DELETE /delete 
+        run: |
+          curl --fail -X DELETE "http://localhost:3000/delete" -H "Content-Type: application/json" -d '{"username": "penny", "password": "robot87284"}'
+          
+
       # The following tests existed before alphanumeric support for passwords.
       # - name: POST /signup-string
       #   run: |
