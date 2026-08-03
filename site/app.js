@@ -90,7 +90,7 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/signup', (req, res) => {
-  const givenId = req.body.id;
+  const givenId = user.at(-1).id + 1; //add 1 to the last user, thus users don't need to supply ids as part of their POST req
   const givenUsername = req.body.username;
   const givenHash = hashFunc(req.body.password);
 
