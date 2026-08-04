@@ -1,8 +1,11 @@
 const express = require('express');
+const path = require('path')
 const app = express();
 const port = 3000;
 
 app.use(express.json())
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 const blogs = [
   { id: 1, title: "Intro to Node.js", content: "Node.js is a Javascript runtime built on Chrome's V8 engine..." },
@@ -55,7 +58,7 @@ app.head('/', (req, res) => { //healthcheck
   return res.status(200).end();
 })
 
-app.get('/', (req, res) => {
+app.get('/message', (req, res) => {
   res.send(`<h1>Welcome!</h1>`)
 })
 
